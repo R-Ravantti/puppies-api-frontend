@@ -1,35 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
+import PuppyCard from './PuppyCard';
+import { DogDTO, fetchAllPuppies, addPuppy } from './Apicalls';
 import './App.css';
-
-type DogDTO = {
-  id: string,
-  name: string,
-  breed: string,
-  birthdate: string
-}
-
-async function fetchAllPuppies(setPuppies: React.Dispatch<React.SetStateAction<DogDTO[]>>) {
-  const response = await fetch('http://localhost:8080/api/puppies');
-  const puppiesList: DogDTO[] = await response.json();
-  setPuppies(puppiesList);
-}
-
-async function fetchPuppy() {
-
-}
-
-async function addPuppy() {
-
-}
-
-async function updatePuppy() {
-
-}
-
-async function deletePuppy() {
-
-}
 
 function App() {
   const [puppies, setPuppies] = useState<DogDTO[]>([]);
@@ -40,21 +12,23 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        {puppies.map((puppy) => {
-          return (<p>{puppy.name}</p>)
-        })}
+        <div className="Puppy-holder">
+          {puppies.map((puppy) => {
+            return <PuppyCard puppyInfo={puppy} setPuppies={setPuppies}></PuppyCard>
+          })}
+        </div>
+        <div className="Puppy-form">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            addPuppy(e, setPuppies);
+          }}>
+            <input type="text" placeholder="Id" name="puppyId" />
+            <input type="text" placeholder="Name" name="puppyName" />
+            <input type="text" placeholder="Breed" name="puppyBreed" />
+            <input type="text" placeholder="Birth date" name="puppyBirthdate" />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
       </header>
     </div>
   );
